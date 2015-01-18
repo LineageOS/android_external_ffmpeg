@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a9d85d2_4048132e",
+        "filename": "android/include/config-x86.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 10291
+      },
+      "writtenOn": "2015-01-18T16:20:27Z",
+      "side": 1,
+      "message": "some of the assembly wouldn\u0027t compile with this set to 1; it seems to expect there to be 6 registers available for asm and gcc was throwing up about \"impossible constraints\". i had to manually edit this file to set it to 0 (there is no switch available for the configure script).",
+      "revId": "a33710cb7597ec62951866f19eb4eaaa0b3e2b26",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a9d85d2_00460b23",
+        "filename": "libavcodec/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 10291
+      },
+      "writtenOn": "2015-01-18T16:20:27Z",
+      "side": 1,
+      "message": "arcee (since it looks like you added these lines): is this a sufficient check for whether or not we\u0027ve got NEON extensions? arm64 has NEON by default, but in my build it doesn\u0027t appear to have turned on ARCH_ARM_HAVE_NEON. Do we need to alter this check, or should TARGET_ARCH\u003darm64 --\u003e ARCH_ARM_HAVE_NEON\u003dtrue?",
+      "revId": "a33710cb7597ec62951866f19eb4eaaa0b3e2b26",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
