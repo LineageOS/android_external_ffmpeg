@@ -33,6 +33,24 @@
       "revId": "a33710cb7597ec62951866f19eb4eaaa0b3e2b26",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a9d85d2_3b6d3905",
+        "filename": "libavcodec/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 10
+      },
+      "writtenOn": "2015-01-19T15:58:03Z",
+      "side": 1,
+      "message": "Actually, armv8 doesn\u0027t set that flag (even if armv8 can be safely assumed to always have NEON). We should probably fix that in build/\n\nTotally OK with merging this.",
+      "parentUuid": "5a9d85d2_00460b23",
+      "revId": "a33710cb7597ec62951866f19eb4eaaa0b3e2b26",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
