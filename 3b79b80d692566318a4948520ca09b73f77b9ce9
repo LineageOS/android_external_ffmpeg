@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a25e98e_66bb8e0f",
+        "filename": "android/include/config-silvermont.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 6334
+      },
+      "writtenOn": "2015-06-22T15:40:14Z",
+      "side": 1,
+      "message": "Meant to be changed?",
+      "revId": "3b79b80d692566318a4948520ca09b73f77b9ce9",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
