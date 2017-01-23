@@ -45,8 +45,5 @@ ifneq ($(ARCH_ARM_HAVE_NEON),)
   LOCAL_SRC_FILES += neon/mpegvideo.c
 endif
 
-# This file crashes SDCLANG at -O2 or -O3
-$(intermediates)/vp9dsp_8bpp.o: PRIVATE_CFLAGS += $(if $(filter arm64,$(TARGET_ARCH)),-O1)
-
 LOCAL_MULTILIB := $(FFMPEG_MULTILIB)
 include $(BUILD_SHARED_LIBRARY)
