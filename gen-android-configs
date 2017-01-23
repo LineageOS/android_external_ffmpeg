@@ -2,10 +2,10 @@
 #
 # Generate configurations for various FFMPEG targets
 TARGETS="armv5te armv7-a armv7-a-neon armv8-a silvermont x86"
-SYSROOT_BASE="../../prebuilts/ndk/current/platforms/android-21"
+SYSROOT_BASE="../../prebuilts/ndk/current/platforms/android-24"
 TOOLS_BASE="../../prebuilts/gcc/linux-x86"
 
-BASE_CONFIG="--disable-static --enable-shared --enable-optimizations --disable-doc --disable-symver --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-avdevice --disable-devices --disable-filters --disable-demuxer=srt --disable-demuxer=microdvd --disable-demuxer=jacosub --disable-demuxer=sami --disable-demuxer=realtext --disable-demuxer=dts --disable-demuxer=subviewer --disable-demuxer=subviewer1 --disable-demuxer=pjs --disable-demuxer=vplayer --disable-demuxer=mpl2 --disable-decoder=ass --disable-decoder=srt --disable-decoder=subrip --disable-decoder=microdvd --disable-decoder=jacosub --disable-decoder=sami --disable-decoder=realtext --disable-decoder=movtext --disable-decoder=subviewer --disable-decoder=subviewer1 --disable-decoder=pjs --disable-decoder=vplayer --disable-decoder=mpl2 --enable-zlib --enable-pic --disable-debug"
+BASE_CONFIG="--disable-static --enable-shared --enable-optimizations --disable-symver --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-avdevice --disable-devices --disable-filters --disable-demuxer=srt --disable-demuxer=microdvd --disable-demuxer=jacosub --disable-demuxer=sami --disable-demuxer=realtext --disable-demuxer=dts --disable-demuxer=subviewer --disable-demuxer=subviewer1 --disable-demuxer=pjs --disable-demuxer=vplayer --disable-demuxer=mpl2 --disable-decoder=ass --disable-decoder=srt --disable-decoder=subrip --disable-decoder=microdvd --disable-decoder=jacosub --disable-decoder=sami --disable-decoder=realtext --disable-decoder=movtext --disable-decoder=subviewer --disable-decoder=subviewer1 --disable-decoder=pjs --disable-decoder=vplayer --disable-decoder=mpl2 --enable-zlib --enable-pic --disable-debug --disable-doc --disable-htmlpages --disable-manpages --disable-podpages --disable-txtpages"
 
 OPTS_armv5te="--arch=arm --cpu=armv5te --build_suffix= --cross-prefix=${TOOLS_BASE}/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- --enable-cross-compile --sysroot=${SYSROOT_BASE}/arch-arm --target-os=linux"
 
