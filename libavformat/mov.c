@@ -380,11 +380,11 @@ retry:
                 return ret;
             } else if (!key && c->found_hdlr_mdta && c->meta_keys) {
                 uint32_t index = AV_RB32(&atom.type);
-                if (index < c->meta_keys_count) {
+                if (index < c->meta_keys_count && index > 0) {
                     key = c->meta_keys[index];
                 } else {
                     av_log(c->fc, AV_LOG_WARNING,
-                           "The index of 'data' is out of range: %d >= %d.\n",
+                           "The index of 'data' is out of range: %d < 1 or >= %d.\n",
                            index, c->meta_keys_count);
                 }
             }
@@ -674,6 +674,8 @@ static int mov_read_hdlr(MOVContext *c, AVIOContext *pb, MOVAtom atom)
 
     title_size = atom.size - 24;
     if (title_size > 0) {
+        if (title_size > FFMIN(INT_MAX, SIZE_MAX-1))
+            return AVERROR_INVALIDDATA;
         title_str = av_malloc(title_size + 1); /* Add null terminator */
         if (!title_str)
             return AVERROR(ENOMEM);
@@ -3899,7 +3901,7 @@ static int mov_read_uuid(MOVContext *c, AVIOContext *pb, MOVAtom atom)
         0x9c, 0x71, 0x99, 0x94, 0x91, 0xe3, 0xaf, 0xac
     };
 
-    if (atom.size < sizeof(uuid) || atom.size == INT64_MAX)
+    if (atom.size < sizeof(uuid) || atom.size >= FFMIN(INT_MAX, SIZE_MAX))
         return AVERROR_INVALIDDATA;
 
     ret = avio_read(pb, uuid, sizeof(uuid));
@@ -4062,8 +4064,8 @@ static int mov_read_senc(MOVContext *c, AVIOContext *pb, MOVAtom atom)
 
     avio_rb32(pb);        /* entries */
 
-    if (atom.size < 8) {
-        av_log(c->fc, AV_LOG_ERROR, "senc atom size %"PRId64" too small\n", atom.size);
+    if (atom.size < 8 || atom.size > FFMIN(INT_MAX, SIZE_MAX)) {
+        av_log(c->fc, AV_LOG_ERROR, "senc atom size %"PRId64" invalid\n", atom.size);
         return AVERROR_INVALIDDATA;
     }
 

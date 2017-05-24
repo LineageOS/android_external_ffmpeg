@@ -201,12 +201,12 @@ static int get_metadata_size(const uint8_t *buf, int buf_size)
     buf += 4;
     do {
         if (buf_end - buf < 4)
-            return 0;
+            return AVERROR_INVALIDDATA;
         flac_parse_block_header(buf, &metadata_last, NULL, &metadata_size);
         buf += 4;
         if (buf_end - buf < metadata_size) {
             /* need more data in order to read the complete header */
-            return 0;
+            return AVERROR_INVALIDDATA;
         }
         buf += metadata_size;
     } while (!metadata_last);
@@ -268,7 +268,8 @@ static int decode_subframe_fixed(FLACContext *s, int32_t *decoded,
                                  int pred_order, int bps)
 {
     const int blocksize = s->blocksize;
-    int av_uninit(a), av_uninit(b), av_uninit(c), av_uninit(d), i;
+    unsigned av_uninit(a), av_uninit(b), av_uninit(c), av_uninit(d);
+    int i;
     int ret;
 
     /* warm up samples */
@@ -447,7 +448,7 @@ static inline int decode_subframe(FLACContext *s, int channel)
     if (wasted) {
         int i;
         for (i = 0; i < s->blocksize; i++)
-            decoded[i] <<= wasted;
+            decoded[i] = (unsigned)decoded[i] << wasted;
     }
 
     return 0;

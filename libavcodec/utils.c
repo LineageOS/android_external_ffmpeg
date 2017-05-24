@@ -373,6 +373,10 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
             w_align = 4;
             h_align = 4;
         }
+        if (s->codec_id == AV_CODEC_ID_INTERPLAY_VIDEO) {
+            w_align = 8;
+            h_align = 8;
+        }
         break;
     case AV_PIX_FMT_PAL8:
     case AV_PIX_FMT_BGR8:
@@ -382,7 +386,8 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
             w_align = 4;
             h_align = 4;
         }
-        if (s->codec_id == AV_CODEC_ID_JV) {
+        if (s->codec_id == AV_CODEC_ID_JV ||
+            s->codec_id == AV_CODEC_ID_INTERPLAY_VIDEO) {
             w_align = 8;
             h_align = 8;
         }
@@ -957,6 +962,7 @@ int avcodec_default_execute(AVCodecContext *c, int (*func)(AVCodecContext *c2, v
         if (ret)
             ret[i] = r;
     }
+    emms_c();
     return 0;
 }
 
@@ -969,6 +975,7 @@ int avcodec_default_execute2(AVCodecContext *c, int (*func)(AVCodecContext *c2, 
         if (ret)
             ret[i] = r;
     }
+    emms_c();
     return 0;
 }
 
