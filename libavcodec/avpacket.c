@@ -280,16 +280,17 @@ FF_ENABLE_DEPRECATION_WARNINGS
 int av_packet_add_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
                             uint8_t *data, size_t size)
 {
+    AVPacketSideData *tmp;
     int elems = pkt->side_data_elems;
 
-    if ((unsigned)elems + 1 > INT_MAX / sizeof(*pkt->side_data))
+    if ((unsigned)elems + 1 > AV_PKT_DATA_NB)
         return AVERROR(ERANGE);
 
-    pkt->side_data = av_realloc(pkt->side_data,
-                                (elems + 1) * sizeof(*pkt->side_data));
-    if (!pkt->side_data)
+    tmp = av_realloc(pkt->side_data, (elems + 1) * sizeof(*tmp));
+    if (!tmp)
         return AVERROR(ENOMEM);
 
+    pkt->side_data = tmp;
     pkt->side_data[elems].data = data;
     pkt->side_data[elems].size = size;
     pkt->side_data[elems].type = type;
@@ -332,6 +333,8 @@ uint8_t *av_packet_get_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
             return pkt->side_data[i].data;
         }
     }
+    if (size)
+        *size = 0;
     return NULL;
 }
 
@@ -412,6 +415,9 @@ int av_packet_split_side_data(AVPacket *pkt){
                 return 0;
             p-= size+5;
         }
+
+        if (i > AV_PKT_DATA_NB)
+            return AVERROR(ERANGE);
 
         pkt->side_data = av_malloc_array(i, sizeof(*pkt->side_data));
         if (!pkt->side_data)

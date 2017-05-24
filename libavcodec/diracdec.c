@@ -1900,7 +1900,9 @@ static int dirac_decode_picture_header(DiracContext *s)
             for (j = 0; j < MAX_FRAMES; j++)
                 if (!s->all_frames[j].avframe->data[0]) {
                     s->ref_pics[i] = &s->all_frames[j];
-                    get_buffer_with_edge(s->avctx, s->ref_pics[i]->avframe, AV_GET_BUFFER_FLAG_REF);
+                    ret = get_buffer_with_edge(s->avctx, s->ref_pics[i]->avframe, AV_GET_BUFFER_FLAG_REF);
+                    if (ret < 0)
+                        return ret;
                     break;
                 }
 
@@ -1964,9 +1966,9 @@ static int get_delayed_pic(DiracContext *s, AVFrame *picture, int *got_frame)
 
     if (out) {
         out->reference ^= DELAYED_PIC_REF;
-        *got_frame = 1;
         if((ret = av_frame_ref(picture, out->avframe)) < 0)
             return ret;
+        *got_frame = 1;
     }
 
     return 0;

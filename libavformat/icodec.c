@@ -60,7 +60,7 @@ static int probe(AVProbeData *p)
         offset = AV_RL32(p->buf + 18 + i * 16);
         if (offset < 22)
             return FFMIN(i, AVPROBE_SCORE_MAX / 4);
-        if (offset + 8 > p->buf_size)
+        if (offset > p->buf_size - 8)
             return AVPROBE_SCORE_MAX / 4 + FFMIN(i, 1);
         if (p->buf[offset] != 40 && AV_RB64(p->buf + offset) != PNGSIG)
             return FFMIN(i, AVPROBE_SCORE_MAX / 4);
@@ -105,6 +105,10 @@ static int read_header(AVFormatContext *s)
         avio_skip(pb, 5);
 
         ico->images[i].size   = avio_rl32(pb);
+        if (ico->images[i].size <= 0) {
+            av_log(s, AV_LOG_ERROR, "Invalid image size %d\n", ico->images[i].size);
+            return AVERROR_INVALIDDATA;
+        }
         ico->images[i].offset = avio_rl32(pb);
 
         if (avio_seek(pb, ico->images[i].offset, SEEK_SET) < 0)
@@ -170,8 +174,10 @@ static int read_packet(AVFormatContext *s, AVPacket *pkt)
         bytestream_put_le16(&buf, 0);
         bytestream_put_le32(&buf, 0);
 
-        if ((ret = avio_read(pb, buf, image->size)) < 0)
-            return ret;
+        if ((ret = avio_read(pb, buf, image->size)) != image->size) {
+            av_packet_unref(pkt);
+            return ret < 0 ? ret : AVERROR_INVALIDDATA;
+        }
 
         st->codec->bits_per_coded_sample = AV_RL16(buf + 14);
 
@@ -193,6 +199,13 @@ static int read_packet(AVFormatContext *s, AVPacket *pkt)
     return 0;
 }
 
+static int ico_read_close(AVFormatContext * s)
+{
+    IcoDemuxContext *ico = s->priv_data;
+    av_freep(&ico->images);
+    return 0;
+}
+
 AVInputFormat ff_ico_demuxer = {
     .name           = "ico",
     .long_name      = NULL_IF_CONFIG_SMALL("Microsoft Windows ICO"),
@@ -200,5 +213,6 @@ AVInputFormat ff_ico_demuxer = {
     .read_probe     = probe,
     .read_header    = read_header,
     .read_packet    = read_packet,
+    .read_close     = ico_read_close,
     .flags          = AVFMT_NOTIMESTAMPS,
 };

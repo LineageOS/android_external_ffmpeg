@@ -167,6 +167,7 @@ static int h263_decode_gob_header(MpegEncContext *s)
         /* We have a GBSC probably with GSTUFF */
     skip_bits(&s->gb, 16); /* Drop the zeros */
     left= get_bits_left(&s->gb);
+    left = FFMIN(left, 32);
     //MN: we must check the bits left or we might end in a infinite loop (or segfault)
     for(;left>13; left--){
         if(get_bits1(&s->gb)) break; /* Seek the '1' bit */
@@ -523,7 +524,7 @@ retry:
                     }else{
                         level = SHOW_UBITS(re, &s->gb, 5);
                         SKIP_CACHE(re, &s->gb, 5);
-                        level |= SHOW_SBITS(re, &s->gb, 6)<<5;
+                        level |= SHOW_SBITS(re, &s->gb, 6) * (1<<5);
                         SKIP_COUNTER(re, &s->gb, 5 + 6);
                     }
                 }

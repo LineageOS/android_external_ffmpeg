@@ -112,7 +112,7 @@ static int mpegps_probe(AVProbeData *p)
                           : AVPROBE_SCORE_EXTENSION / 2; // 1 more than .mpg
     if ((!!vid ^ !!audio) && (audio > 4 || vid > 1) && !sys &&
         !pspack && p->buf_size > 2048 && vid + audio > invalid) /* PES stream */
-        return (audio > 12 || vid > 3 + 2 * invalid) ? AVPROBE_SCORE_EXTENSION + 2
+        return (audio > 12 || vid > 6 + 2 * invalid) ? AVPROBE_SCORE_EXTENSION + 2
                                                      : AVPROBE_SCORE_EXTENSION / 2;
 
     // 02-Penguin.flac has sys:0 priv1:0 pspack:0 vid:0 audio:1
@@ -138,7 +138,7 @@ typedef struct MpegDemuxContext {
 static int mpegps_read_header(AVFormatContext *s)
 {
     MpegDemuxContext *m = s->priv_data;
-    char buffer[7];
+    char buffer[7] = { 0 };
     int64_t last_pos = avio_tell(s->pb);
 
     m->header_state = 0xff;
