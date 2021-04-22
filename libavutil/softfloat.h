@@ -43,6 +43,7 @@ static const SoftFloat FLOAT_EPSILON    = { 0x29F16B12, -16};
 static const SoftFloat FLOAT_1584893192 = { 0x32B771ED,   1};
 static const SoftFloat FLOAT_100000     = { 0x30D40000,  17};
 static const SoftFloat FLOAT_0999999    = { 0x3FFFFBCE,   0};
+static const SoftFloat FLOAT_MIN        = { 0x20000000,   MIN_EXP};
 
 static inline av_const double av_sf2double(SoftFloat v) {
     v.exp -= ONE_BITS +1;
@@ -157,8 +158,10 @@ static inline av_const SoftFloat av_sub_sf(SoftFloat a, SoftFloat b){
 //FIXME log, exp, pow
 
 /**
- * Converts a mantisse and exponent to a SoftFloat
- * @returns a SoftFloat with value v * 2^frac_bits
+ * Converts a mantisse and exponent to a SoftFloat.
+ * This converts a fixed point value v with frac_bits fractional bits to a
+ * SoftFloat.
+ * @returns a SoftFloat with value v * 2^-frac_bits
  */
 static inline av_const SoftFloat av_int2sf(int v, int frac_bits){
     int exp_offset = 0;
