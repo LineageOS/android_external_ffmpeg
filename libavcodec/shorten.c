@@ -313,9 +313,9 @@ static int decode_subframe_lpc(ShortenContext *s, int command, int channel,
     for (i = 0; i < s->blocksize; i++) {
         sum = init_sum;
         for (j = 0; j < pred_order; j++)
-            sum += coeffs[j] * s->decoded[channel][i - j - 1];
+            sum += coeffs[j] * (unsigned)s->decoded[channel][i - j - 1];
         s->decoded[channel][i] = get_sr_golomb_shorten(&s->gb, residual_size) +
-                                 (sum >> qshift);
+                                 (unsigned)(sum >> qshift);
     }
 
     /* add offset to current samples */
@@ -369,10 +369,18 @@ static int read_header(ShortenContext *s)
         s->blocksize = blocksize;
 
         maxnlpc  = get_uint(s, LPCQSIZE);
+        if (maxnlpc > 1024U) {
+            av_log(s->avctx, AV_LOG_ERROR, "maxnlpc is: %d\n", maxnlpc);
+            return AVERROR_INVALIDDATA;
+        }
         s->nmean = get_uint(s, 0);
+        if (s->nmean > 32768U) {
+            av_log(s->avctx, AV_LOG_ERROR, "nmean is: %d\n", s->nmean);
+            return AVERROR_INVALIDDATA;
+        }
 
         skip_bytes = get_uint(s, NSKIPSIZE);
-        if ((unsigned)skip_bytes > get_bits_left(&s->gb)/8) {
+        if ((unsigned)skip_bytes > FFMAX(get_bits_left(&s->gb), 0)/8) {
             av_log(s->avctx, AV_LOG_ERROR, "invalid skip_bytes: %d\n", skip_bytes);
             return AVERROR_INVALIDDATA;
         }
@@ -510,6 +518,11 @@ static int shorten_decode_frame(AVCodecContext *avctx, void *data,
             switch (cmd) {
             case FN_VERBATIM:
                 len = get_ur_golomb_shorten(&s->gb, VERBATIM_CKSIZE_SIZE);
+                if (len < 0 || len > get_bits_left(&s->gb)) {
+                    av_log(avctx, AV_LOG_ERROR, "verbatim length %d invalid\n",
+                           len);
+                    return AVERROR_INVALIDDATA;
+                }
                 while (len--)
                     get_ur_golomb_shorten(&s->gb, VERBATIM_BYTE_SIZE);
                 break;
@@ -567,7 +580,7 @@ static int shorten_decode_frame(AVCodecContext *avctx, void *data,
             else {
                 int32_t sum = (s->version < 2) ? 0 : s->nmean / 2;
                 for (i = 0; i < s->nmean; i++)
-                    sum += s->offset[channel][i];
+                    sum += (unsigned)s->offset[channel][i];
                 coffset = sum / s->nmean;
                 if (s->version >= 2)
                     coffset = s->bitshift == 0 ? coffset : coffset >> s->bitshift - 1 >> 1;
@@ -585,7 +598,7 @@ static int shorten_decode_frame(AVCodecContext *avctx, void *data,
 
             /* update means with info from the current block */
             if (s->nmean > 0) {
-                int32_t sum = (s->version < 2) ? 0 : s->blocksize / 2;
+                int64_t sum = (s->version < 2) ? 0 : s->blocksize / 2;
                 for (i = 0; i < s->blocksize; i++)
                     sum += s->decoded[channel][i];
 

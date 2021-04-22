@@ -615,7 +615,7 @@ static inline int decode_residual_inter(AVSContext *h)
 
     /* get quantizer */
     if (h->cbp && !h->qp_fixed)
-        h->qp = (h->qp + get_se_golomb(&h->gb)) & 63;
+        h->qp = (h->qp + (unsigned)get_se_golomb(&h->gb)) & 63;
     for (block = 0; block < 4; block++)
         if (h->cbp & (1 << block))
             decode_residual_block(h, &h->gb, inter_dec, 0, h->qp,
@@ -1067,6 +1067,11 @@ static int decode_pic(AVSContext *h)
     if (!h->loop_filter_disable && get_bits1(&h->gb)) {
         h->alpha_offset        = get_se_golomb(&h->gb);
         h->beta_offset         = get_se_golomb(&h->gb);
+        if (   h->alpha_offset < -64 || h->alpha_offset > 64
+            || h-> beta_offset < -64 || h-> beta_offset > 64) {
+            h->alpha_offset = h->beta_offset  = 0;
+            return AVERROR_INVALIDDATA;
+        }
     } else {
         h->alpha_offset = h->beta_offset  = 0;
     }
