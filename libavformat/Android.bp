@@ -183,6 +183,7 @@ cc_library_shared {
         "h261dec.c",
         "h263dec.c",
         "h264dec.c",
+        "h2645_parse.c",
         "hashenc.c",
         "hca.c",
         "hcom.c",

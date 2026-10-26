@@ -32,7 +32,6 @@ cc_library_shared {
     name: "libswscale",
     defaults: ["ffmpeg_defaults"],
     shared_libs: [
-        "libavfilter",
         "libavutil",
     ],
     srcs: [
@@ -53,6 +52,7 @@ cc_library_shared {
         "csputils.c",
         "filters.c",
         "format.c",
+        "framepool.c",
         "gamma.c",
         "graph.c",
         "half2float.c",

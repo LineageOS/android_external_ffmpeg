@@ -65,6 +65,7 @@ cc_defaults {
         "-Wstrict-prototypes",
         "-Wtype-limits",
         "-Wundef",
+        "-Wunterminated-string-initialization",
         "-Wwrite-strings",
         "-fPIC",
         "-fPIE",

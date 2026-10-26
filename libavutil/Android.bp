@@ -7,9 +7,6 @@
 cc_library_shared {
     name: "libavutil",
     defaults: ["ffmpeg_defaults"],
-    shared_libs: [
-        "libdrm",
-    ],
     srcs: [
         "aarch64/cpu.c",
         "aarch64/cpu_sme.S",
@@ -60,7 +57,6 @@ cc_library_shared {
         "hdr_dynamic_vivid_metadata.c",
         "hmac.c",
         "hwcontext.c",
-        "hwcontext_drm.c",
         "hwcontext_stub.c",
         "iamf.c",
         "imgutils.c",
