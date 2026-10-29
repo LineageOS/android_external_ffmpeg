@@ -16,6 +16,24 @@
       "message": "Thanks for the cleanup. Is the bp generation script publicly available anywhere? We\u0027ve got a couple different hw backends we\u0027d like to enable soon, including new tegra-drm uapi handling, and it\u0027d be preferable to just match this up front.",
       "revId": "4528a5d4c49d5d520f843284bbb4e8c9cc1c6e03",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aded510_fdca2439",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1391
+      },
+      "writtenOn": "2026-10-29T21:25:53Z",
+      "side": 1,
+      "message": "Never really got around cleaning them up so it is what it is. I pushed them here now.\nhttps://github.com/raspberry-vanilla/android_external_ffmpeg/commits/android-17.0-9.0-script/\n\nYou\u0027re expected to have the Android.bp files present and you need \u0027bpfmt\u0027 installed for the sources scripts at least. cflags script just provides some guideline. You still need to go through manually what works with Clang.\n\nAlso I didn\u0027t update it to handle the generated sources you added in 9.0 for libswscale. Thanks for that as it saved me time not needing to figure it out. Certainly doesn\u0027t hurt to have more people working with the same stuff!",
+      "parentUuid": "a355e6a6_795096e0",
+      "revId": "4528a5d4c49d5d520f843284bbb4e8c9cc1c6e03",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
