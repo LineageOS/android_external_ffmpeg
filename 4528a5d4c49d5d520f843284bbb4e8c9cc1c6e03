@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a355e6a6_795096e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14048
+      },
+      "writtenOn": "2026-10-29T20:08:55Z",
+      "side": 1,
+      "message": "Thanks for the cleanup. Is the bp generation script publicly available anywhere? We\u0027ve got a couple different hw backends we\u0027d like to enable soon, including new tegra-drm uapi handling, and it\u0027d be preferable to just match this up front.",
+      "revId": "4528a5d4c49d5d520f843284bbb4e8c9cc1c6e03",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
